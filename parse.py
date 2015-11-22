@@ -33,8 +33,9 @@ def parse1(file1):
             #print ingredientQuantity
         ingredientString = ""
         for info in ingredientList:
-            ingredientString = ingredientString + info + ","
-        recipe.append(ingredientString)
+            ingredientString = ingredientString + info + "|"
+        
+        recipe.append(ingredientString[:-1])
         csvRecipes.append(recipe)
     string1 = ""
     entireList = open(file1, 'r')
@@ -42,7 +43,8 @@ def parse1(file1):
         string1 = string1 + str(line)
     memoList = str.split(string1, "<recipe createDate")
     del memoList[0]
-    
+    count = 0
+    del csvRecipes[0]
     for recipe in memoList:
         #add 13
         #subtract 2
@@ -50,22 +52,27 @@ def parse1(file1):
         first = first + 13
         second = recipe.index('modifyDate=')
         second = second - 2
-
+        
+    
         try:
             third = recipe.index("METHOD")
             fourth = recipe.index(']]></memo>')
-            for item in csvRecipes:
-                if item[0] == recipe[first:second]:
-                    item.append(recipe[third:fourth])
-                    print (recipe[third:fourth])
+            csvRecipes[count].append(recipe[third:fourth])
+            count += 1
+#            for item in csvRecipes:
+#                if item[0] == recipe[first:second]:
+#                    item.append(recipe[third:fourth])
+#                    print (recipe[third:fourth])
 
     #need to remove everything before the xml data        
         #need to parse the recipe to make it look cleaner
-        except:        
-            for item in csvRecipes:
-                if item[0] == recipe[first:second]:
-                    item.append(recipe[third:fourth])
-                    print (recipe[third:fourth])
+        except:
+            csvRecipes[count].append(recipe[third:fourth])
+            count += 1
+#            for item in csvRecipes:
+#                if item[0] == recipe[first:second]:
+#                    item.append(recipe[third:fourth])
+#                    print (recipe[third:fourth])
                 #third is good need to work on the bottom portion
     
         
